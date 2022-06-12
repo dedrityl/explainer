@@ -1,0 +1,176 @@
+---
+title: "Loops Explained"
+author: "Tyler Dedrick"
+date: "4/30/22"
+output: 
+  html_document:
+    theme: cerulean
+    toc: true
+    toc_float: true
+    code_download: true
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = TRUE,
+                      error = TRUE)
+
+
+library(tidyverse)
+library(janitor)
+library(lubridate)
+
+
+```
+
+## Introduction
+
+This explainer will serve as a basic introduction to R's for loop function.
+
+### What is a loop?
+
+We saw this tweet about loops all the way back at the beginning of the semester, in our ["A gentle intro to programming"](https://cronkitedata.github.io/djtextbook/appendix-program.html#appendix-program) section of our textbook:
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">For loops aren&#39;t always scary monsters. <br><br>Conceptual intro (no, this code won&#39;t run...) to for loops. Thanks <a href="https://twitter.com/ChelseaParlett?ref_src=twsrc%5Etfw">@ChelseaParlett</a> for brainstorming w/ me on this one! 👾👾👾 <a href="https://t.co/TySFHogG2d">pic.twitter.com/TySFHogG2d</a></p>&mdash; Allison Horst (@allison_horst) <a href="https://twitter.com/allison_horst/status/1290774616038809600?ref_src=twsrc%5Etfw">August 4, 2020</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+
+A loop is a function that automates repetitive actions until a particular condition is met. 
+
+There are multiple types of loops. Today we'll focus on the for loop. Other types of loops include while and repeat loops.
+
+A loop is useful for performing certain actions on a very large amount of data quickly. Rather than having to copy and paste or run the same calculations over and over again, a loop lets us make the computer do all the work.
+
+## Building a for loop
+Here is what a for loop looks like:
+
+```{r, eval=F, echo=T}
+
+for(value in sequence) {
+action
+}
+
+```
+In this template, a "sequence" is a series of variables. It could be a list, a vector, a matrix — whatever it is you want your loop to work its way through.
+
+"value" represents a single instance in the sequence; it changes as the loop makes its way through the sequence.
+
+Finally, "action" is whatever you want your code to do with each of the values in the sequence.
+
+To help clarify, let's look at a for loop in action.
+
+Below we have a sequence of values: a vector containing the numbers 1, 2, 4, 6 and 12. To start, I would like my action to be a simple print of each of these values, one after another. 
+
+Here's what that looks like:
+
+
+```{r}
+numbers <- c(1,2,4,6,12)
+```
+
+
+```{r}
+# Using the for loop will pull each value from the vector "numbers", one after the other.
+for (values in numbers) {
+  # This line — the "action" line, will print the value
+  print(values)
+  # Then we will move on to the next value and do the some thing
+}
+```
+
+You can assign almost any name to your values. In the above example, we called them "values." In the below example, I use "i". 
+
+```{r}
+  for (i in numbers) {
+    print(i)
+  }
+
+
+```
+You can see that the result is the same when I call my values "values" or "i". That's because these names are just representations each value contained in our sequence, like a stand-in.
+
+### Adding functions
+
+Now that we understand the basic structure of a for loop, we can get creative about our "action." This code goes between the curly braces {}  
+
+Let's say we want to multiple each value by 3. Here's how we could do that:
+
+```{r}
+ for (i in numbers) {
+   i <- i * 3
+   # note that we need to assign i a new value of i * 3 before we print the results
+    print(i)
+  }
+```
+
+## Combining for loops with functions we've learned
+
+In data journalism, we will want to use R to quickly pull and manipulate large amounts of data. 
+
+One way we might manipulate data using a loop is by combining a loop with the if/when function we learned. 
+
+In this simple example, we'll use "paste", which we briefly learned in our data viz section, and the if/when function to decide what days we need to work, and what days we can party.
+
+### Using paste
+
+Here we have a simple vector of the days of the week:
+
+```{r}
+week <- c("Sunday",
+           "Monday",
+           "Tuesday",
+           "Wednesday",
+           "Thursday",
+           "Friday",
+           "Saturday")
+```
+
+In this first example, we combine a loop and the paste function. As a reminder, here's how the paste function can be constructed:
+
+```{r, eval=F, echo=T}
+paste("Some text you want goes in quotes", value, "more text, remember your commas after each piece of your variable!")
+```
+In the below example, we're first going to use paste to combine each day of the week into a sentence, then we will print every sentence.
+
+```{r}
+
+# To begin our loop, we ask R to evaluate each value ("days") in our vector ("week")
+for(days in week) {
+  # Next, we create a new variable called "gameplan". This is where we deposit our complete sentence, that we build using the "paste" function.
+  gameplan <- paste("It's",days,"today, let's work!")
+  # Finally, we print our new variable "gameplan." 
+print(gameplan)
+}
+# Then the loop repeats. Note in the printout below that each variable is its own value, rather than everything being contained in a vector like the original data.
+```
+Now we have a printout of every day of the week, pasted into the sentence "It's __ today, let's work!". But we know what all work and no play does, so let's add our if/else function. 
+
+### Combining for loop with if/else
+
+For our next code, we want to let the computer know that Saturday and Sunday are our party days. Below, we've combined if/when with paste, and nestled it all within our for loop. 
+
+With each iteration of the loop, the code will run through each day of the week and evaluate if it is Saturday or Sunday. If it's not, it will move on to our else statement, and it will print out that it's time to work... but if it is Saturday or Sunday, then it will let us know those are party days!
+
+```{r}
+
+for(days in week) {
+  if (days %in% c("Saturday", "Sunday")) {
+gameplan <- paste("It's",days,"today, let's party!") }
+  else { gameplan <- paste("It's",days,"today, let's work!")}
+print(gameplan) }
+
+```
+
+
+## Sources:
+- [Advanced R by Hadley Wickham](http://adv-r.had.co.nz/Data-structures.html#:~:text=A%20vector%20will%20create%20a,and%20rows%20as%20the%20matrix.)
+
+- [Geeks for Geeks](https://www.geeksforgeeks.org/loops-in-r-for-while-repeat/)
+
+- [Scraping web data with R & the Tidyverse by Harry Anderson](https://medium.com/epfl-extension-school/scraping-web-data-with-r-the-tidyverse-30944ca67c92)
+
+- [DataCamp Intermediate R](https://campus.datacamp.com/courses/intermediate-r/chapter-2-loops?ex=1)
+[R for Data Science](https://r4ds.had.co.nz/index.html)
+
+- And of course [Data Reporting, Spring 2022](https://cronkitedata.github.io/djtextbook/index.html)
+
